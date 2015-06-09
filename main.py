@@ -35,7 +35,7 @@ class LutimUploader():
         self.delay = int(settings.value("delay", 1))
         self.delete_on_firstview = settings.value("firstview", False) in ["true", True]
         self.keep_forever = settings.value("forever", False) in ["true", True]
-        self.verify_ssl = settings.value("verify_ssl", False) in ["true", True]
+        self.verify_ssl = settings.value("verify_ssl", True) in ["true", True]
         settings.endGroup()
 
     def saveSettings(self):

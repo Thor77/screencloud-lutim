@@ -77,7 +77,7 @@ class LutimUploader():
         # upload
 
         def do_request():
-            self.r = requests.post(url, data={'delete-day': delay, 'format': 'json', 'first-view': int(self.delete_on_firstview)}, files={'file': open(tmpFilename)}, verify=self.verify_ssl).json()
+            self.r = requests.post(url, data={'delete-day': delay, 'format': 'json', 'first-view': int(self.delete_on_firstview)}, files={'file': open(tmpFilename, 'rb')}, verify=self.verify_ssl).json()
         try:
             if not self.verify_ssl:
                 with warnings.catch_warnings():

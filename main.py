@@ -1,4 +1,5 @@
 import time
+import warnings
 import requests
 import ScreenCloud
 from PythonQt.QtCore import QFile, QSettings, QUrl
@@ -24,6 +25,7 @@ class LutimUploader():
         self.settingsDialog.group_lutim.input_delay.setValue(self.delay)
         self.settingsDialog.group_lutim.input_firstview.setChecked(self.delete_on_firstview)
         self.settingsDialog.group_lutim.input_forever.setChecked(self.keep_forever)
+        self.settingsDialog.group_lutim.verify_ssl.setChecked(self.verify_ssl)
         self.settingsDialog.adjustSize()
 
     def loadSettings(self):
@@ -33,6 +35,7 @@ class LutimUploader():
         self.delay = int(settings.value("delay", 1))
         self.delete_on_firstview = settings.value("firstview", False) in ["true", True]
         self.keep_forever = settings.value("forever", False) in ["true", True]
+        self.verify_ssl = settings.value("verify_ssl", False) in ["true", True]
         settings.endGroup()
 
     def saveSettings(self):
@@ -42,6 +45,7 @@ class LutimUploader():
         settings.setValue("delay", self.settingsDialog.group_lutim.input_delay.value)
         settings.setValue("firstview", self.settingsDialog.group_lutim.input_firstview.isChecked())
         settings.setValue("forever", self.settingsDialog.group_lutim.input_forever.isChecked())
+        settings.setValue("verify_ssl", self.settingsDialog.group_lutim.verify_ssl.isChecked())
         settings.endGroup()
 
     def isConfigured(self):
@@ -71,8 +75,16 @@ class LutimUploader():
         tmpFilename = QDesktopServices.storageLocation(QDesktopServices.TempLocation) + "/" + ScreenCloud.formatFilename(str(timestamp))
         screenshot.save(QFile(tmpFilename), ScreenCloud.getScreenshotFormat())
         # upload
+
+        def do_request():
+            self.r = requests.post(url, data={'delete-day': delay, 'format': 'json', 'first-view': int(self.delete_on_firstview)}, files={'file': open(tmpFilename)}, verify=self.verify_ssl).json()
         try:
-            r = requests.post(url, data={'delete-day': delay, 'format': 'json', 'first-view': int(self.delete_on_firstview)}, files={'file': open(tmpFilename)}).json()
+            if not self.verify_ssl:
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore')
+                    do_request()
+            else:
+                do_request()
         except ValueError:
             # no lutim instance
             ScreenCloud.setError('No Lutim-Instance there')
@@ -80,8 +92,8 @@ class LutimUploader():
         except Exception as e:
             ScreenCloud.setError('An unknown error appeared, please submit an issue on Github\n' + e.message)
             return False
-        if r['success']:
-            display_url = url + r['msg']['short']
+        if self.r['success']:
+            display_url = url + self.r['msg']['short']
             ScreenCloud.setUrl(display_url)
             return True
         else:

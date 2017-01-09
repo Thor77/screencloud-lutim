@@ -72,7 +72,6 @@ class LutimUploader():
         return bool(self.url)
 
     def getFilename(self):
-        self.loadSettings()
         return time.time()
 
     def upload(self, screenshot, name):

@@ -11,6 +11,8 @@ from PythonQt.QtUiTools import QUiLoader
 
 
 class LutimUploader(object):
+    SHORTNAME = 'lutim'
+
     def __init__(self):
         self.uil = QUiLoader()
         self.loadSettings()
@@ -18,7 +20,11 @@ class LutimUploader(object):
     def showSettingsUI(self, parentWidget):
         self.parentWidget = parentWidget
         self.settingsDialog = self.uil.load(
-            QFile(os.path.join(ScreenCloud.getPluginDir(), 'settings.ui')),
+            QFile(
+                os.path.join(
+                    ScreenCloud.getPluginDir(), self.SHORTNAME, 'settings.ui'
+                )
+            ),
             parentWidget
         )
         self.settingsDialog.connect('accepted()', self.saveSettings)

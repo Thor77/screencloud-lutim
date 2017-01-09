@@ -18,7 +18,7 @@ class LutimUploader():
     def showSettingsUI(self, parentWidget):
         self.parentWidget = parentWidget
         self.settingsDialog = self.uil.load(
-            QFile(workingDir + os.sep + 'settings.ui'),
+            QFile(os.path.join(ScreenCloud.getPluginDir(), 'settings.ui')),
             parentWidget
         )
         self.settingsDialog.connect('accepted()', self.saveSettings)

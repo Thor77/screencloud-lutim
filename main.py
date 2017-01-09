@@ -5,8 +5,7 @@ import warnings
 import requests
 
 import ScreenCloud
-from PythonQt.QtCore import QFile, QSettings
-from PythonQt.QtGui import QDesktopServices
+from PythonQt.QtCore import QFile, QSettings, QStandardPaths
 from PythonQt.QtUiTools import QUiLoader
 
 
@@ -98,8 +97,9 @@ class LutimUploader(object):
         # save to a temporary file
         timestamp = time.time()
         filename = ScreenCloud.formatFilename(str(timestamp))
-        tmpFilename = QDesktopServices.storageLocation(
-            QDesktopServices.TempLocation) + os.sep + filename
+        tmpFilename = os.path.join(QStandardPaths.writableLocation(
+            QStandardPaths.TempLocation
+        ), filename)
         screenshot.save(QFile(tmpFilename), ScreenCloud.getScreenshotFormat())
         # upload
 

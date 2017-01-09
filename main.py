@@ -1,9 +1,11 @@
 import time
 import warnings
+
 import requests
+
 import ScreenCloud
-from PythonQt.QtCore import QFile, QSettings, QUrl
-from PythonQt.QtGui import QWidget, QDialog, QDesktopServices, QMessageBox
+from PythonQt.QtCore import QFile, QSettings
+from PythonQt.QtGui import QDesktopServices
 from PythonQt.QtUiTools import QUiLoader
 
 

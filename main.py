@@ -1,3 +1,4 @@
+import os
 import time
 import warnings
 
@@ -17,7 +18,7 @@ class LutimUploader():
     def showSettingsUI(self, parentWidget):
         self.parentWidget = parentWidget
         self.settingsDialog = self.uil.load(
-            QFile(workingDir + '/settings.ui'),
+            QFile(workingDir + os.sep + 'settings.ui'),
             parentWidget
         )
         self.settingsDialog.connect('accepted()', self.saveSettings)
@@ -93,7 +94,7 @@ class LutimUploader():
         timestamp = time.time()
         filename = ScreenCloud.formatFilename(str(timestamp))
         tmpFilename = QDesktopServices.storageLocation(
-            QDesktopServices.TempLocation) + '/' + filename
+            QDesktopServices.TempLocation) + os.sep + filename
         screenshot.save(QFile(tmpFilename), ScreenCloud.getScreenshotFormat())
         # upload
 

@@ -10,7 +10,7 @@ from PythonQt.QtGui import QDesktopServices
 from PythonQt.QtUiTools import QUiLoader
 
 
-class LutimUploader():
+class LutimUploader(object):
     def __init__(self):
         self.uil = QUiLoader()
         self.loadSettings()

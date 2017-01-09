@@ -15,10 +15,10 @@ class LutimUploader():
     def showSettingsUI(self, parentWidget):
         self.parentWidget = parentWidget
         self.settingsDialog = self.uil.load(
-            QFile(workingDir + "/settings.ui"),
+            QFile(workingDir + '/settings.ui'),
             parentWidget
         )
-        self.settingsDialog.connect("accepted()", self.saveSettings)
+        self.settingsDialog.connect('accepted()', self.saveSettings)
         self.updateUi()
         self.settingsDialog.open()
 
@@ -35,32 +35,32 @@ class LutimUploader():
 
     def loadSettings(self):
         settings = QSettings()
-        settings.beginGroup("lutim")
-        self.url = settings.value("url", "https://lut.im/")
-        self.delay = int(settings.value("delay", 1))
-        self.delete_on_firstview = settings.value("firstview", False) \
-            in ["true", True]
-        self.keep_forever = settings.value("forever", False) in ["true", True]
-        self.verify_ssl = settings.value("verify_ssl", True) in ["true", True]
+        settings.beginGroup('lutim')
+        self.url = settings.value('url', 'https://lut.im/')
+        self.delay = int(settings.value('delay', 1))
+        self.delete_on_firstview = settings.value('firstview', False) \
+            in ['true', True]
+        self.keep_forever = settings.value('forever', False) in ['true', True]
+        self.verify_ssl = settings.value('verify_ssl', True) in ['true', True]
         settings.endGroup()
 
     def saveSettings(self):
         settings = QSettings()
-        settings.beginGroup("lutim")
+        settings.beginGroup('lutim')
         settings.setValue(
-            "url", self.settingsDialog.group_lutim.input_url.text)
+            'url', self.settingsDialog.group_lutim.input_url.text)
         settings.setValue(
-            "delay", self.settingsDialog.group_lutim.input_delay.value)
+            'delay', self.settingsDialog.group_lutim.input_delay.value)
         settings.setValue(
-            "firstview",
+            'firstview',
             self.settingsDialog.group_lutim.input_firstview.isChecked()
         )
         settings.setValue(
-            "forever",
+            'forever',
             self.settingsDialog.group_lutim.input_forever.isChecked()
         )
         settings.setValue(
-            "verify_ssl",
+            'verify_ssl',
             self.settingsDialog.group_lutim.verify_ssl.isChecked()
         )
         settings.endGroup()
@@ -91,7 +91,7 @@ class LutimUploader():
         timestamp = time.time()
         filename = ScreenCloud.formatFilename(str(timestamp))
         tmpFilename = QDesktopServices.storageLocation(
-            QDesktopServices.TempLocation) + "/" + filename
+            QDesktopServices.TempLocation) + '/' + filename
         screenshot.save(QFile(tmpFilename), ScreenCloud.getScreenshotFormat())
         # upload
 

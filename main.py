@@ -14,7 +14,10 @@ class LutimUploader():
 
     def showSettingsUI(self, parentWidget):
         self.parentWidget = parentWidget
-        self.settingsDialog = self.uil.load(QFile(workingDir + "/settings.ui"), parentWidget)
+        self.settingsDialog = self.uil.load(
+            QFile(workingDir + "/settings.ui"),
+            parentWidget
+        )
         self.settingsDialog.connect("accepted()", self.saveSettings)
         self.updateUi()
         self.settingsDialog.open()
@@ -23,8 +26,10 @@ class LutimUploader():
         self.loadSettings()
         self.settingsDialog.group_lutim.input_url.setText(self.url)
         self.settingsDialog.group_lutim.input_delay.setValue(self.delay)
-        self.settingsDialog.group_lutim.input_firstview.setChecked(self.delete_on_firstview)
-        self.settingsDialog.group_lutim.input_forever.setChecked(self.keep_forever)
+        self.settingsDialog.group_lutim.input_firstview.setChecked(
+            self.delete_on_firstview)
+        self.settingsDialog.group_lutim.input_forever.setChecked(
+            self.keep_forever)
         self.settingsDialog.group_lutim.verify_ssl.setChecked(self.verify_ssl)
         self.settingsDialog.adjustSize()
 
@@ -33,7 +38,8 @@ class LutimUploader():
         settings.beginGroup("lutim")
         self.url = settings.value("url", "https://lut.im/")
         self.delay = int(settings.value("delay", 1))
-        self.delete_on_firstview = settings.value("firstview", False) in ["true", True]
+        self.delete_on_firstview = settings.value("firstview", False) \
+            in ["true", True]
         self.keep_forever = settings.value("forever", False) in ["true", True]
         self.verify_ssl = settings.value("verify_ssl", True) in ["true", True]
         settings.endGroup()
@@ -41,11 +47,22 @@ class LutimUploader():
     def saveSettings(self):
         settings = QSettings()
         settings.beginGroup("lutim")
-        settings.setValue("url", self.settingsDialog.group_lutim.input_url.text)
-        settings.setValue("delay", self.settingsDialog.group_lutim.input_delay.value)
-        settings.setValue("firstview", self.settingsDialog.group_lutim.input_firstview.isChecked())
-        settings.setValue("forever", self.settingsDialog.group_lutim.input_forever.isChecked())
-        settings.setValue("verify_ssl", self.settingsDialog.group_lutim.verify_ssl.isChecked())
+        settings.setValue(
+            "url", self.settingsDialog.group_lutim.input_url.text)
+        settings.setValue(
+            "delay", self.settingsDialog.group_lutim.input_delay.value)
+        settings.setValue(
+            "firstview",
+            self.settingsDialog.group_lutim.input_firstview.isChecked()
+        )
+        settings.setValue(
+            "forever",
+            self.settingsDialog.group_lutim.input_forever.isChecked()
+        )
+        settings.setValue(
+            "verify_ssl",
+            self.settingsDialog.group_lutim.verify_ssl.isChecked()
+        )
         settings.endGroup()
 
     def isConfigured(self):
@@ -72,12 +89,25 @@ class LutimUploader():
             delay = self.delay
         # save to a temporary file
         timestamp = time.time()
-        tmpFilename = QDesktopServices.storageLocation(QDesktopServices.TempLocation) + "/" + ScreenCloud.formatFilename(str(timestamp))
+        filename = ScreenCloud.formatFilename(str(timestamp))
+        tmpFilename = QDesktopServices.storageLocation(
+            QDesktopServices.TempLocation) + "/" + filename
         screenshot.save(QFile(tmpFilename), ScreenCloud.getScreenshotFormat())
         # upload
 
         def do_request():
-            self.r = requests.post(url, data={'delete-day': delay, 'format': 'json', 'first-view': int(self.delete_on_firstview)}, files={'file': open(tmpFilename, 'rb')}, verify=self.verify_ssl).json()
+            self.r = requests.post(
+                url,
+                data={
+                    'delete-day': delay,
+                    'format': 'json',
+                    'first-view': int(self.delete_on_firstview)
+                },
+                files={
+                    'file': open(tmpFilename, 'rb')
+                },
+                verify=self.verify_ssl
+            ).json()
         try:
             if not self.verify_ssl:
                 with warnings.catch_warnings():
@@ -90,7 +120,10 @@ class LutimUploader():
             ScreenCloud.setError('No Lutim-Instance there')
             return False
         except Exception as e:
-            ScreenCloud.setError('An unknown error appeared, please submit an issue on Github\n' + e.message)
+            ScreenCloud.setError(
+                'An unknown error appeared, please submit an issue on Github\n'
+                + e.message
+            )
             return False
         if self.r['success']:
             display_url = url + self.r['msg']['short']

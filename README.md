@@ -1,5 +1,5 @@
 # screencloud-lutim
-Screencloud-Plugin for  [Lutim](https://github.com/ldidry/lutim)
+[Screencloud](https://github.com/olav-st/screencloud)-Plugin for  [Lutim](https://github.com/ldidry/lutim)
 
 Installation
 =======

@@ -3,5 +3,5 @@
 	<shortname>lutim</shortname>
 	<className>LutimUploader</className>
 	<icon>icon.png</icon>
-	<version>1.0</version>
+	<version>1.0.0</version>
 </metadata>

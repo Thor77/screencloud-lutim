@@ -101,10 +101,9 @@ class LutimUploader(object):
             QStandardPaths.TempLocation
         ), filename)
         screenshot.save(QFile(tmpFilename), ScreenCloud.getScreenshotFormat())
-        # upload
 
         def do_request():
-            self.r = requests.post(
+            return requests.post(
                 url,
                 data={
                     'delete-day': delay,
@@ -115,28 +114,24 @@ class LutimUploader(object):
                     'file': open(tmpFilename, 'rb')
                 },
                 verify=self.verify_ssl
-            ).json()
-        try:
-            if not self.verify_ssl:
-                with warnings.catch_warnings():
-                    warnings.simplefilter('ignore')
-                    do_request()
-            else:
-                do_request()
-        except ValueError:
-            # no lutim instance
+            )
+        if not self.verify_ssl:
+            with warnings.catch_warnings():
+                warnings.simplefilter('ignore')
+                response = do_request()
+        else:
+            response = do_request()
+        if not response:
             ScreenCloud.setError('No Lutim-Instance there')
             return False
-        except Exception as e:
-            ScreenCloud.setError(
-                'An unknown error appeared, please submit an issue on Github\n'
-                + e.message
-            )
-            return False
-        if self.r['success']:
-            display_url = url + self.r['msg']['short']
+        else:
+            response_data = response.json()
+        if response_data['success']:
+            display_url = url + response_data['msg']['short']
             ScreenCloud.setUrl(display_url)
             return True
         else:
-            ScreenCloud.setError('Lutim says no :(')
+            ScreenCloud.setError(
+                'Lutim reports an error: \n' + response_data['message']
+            )
             return False

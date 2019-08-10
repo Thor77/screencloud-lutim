@@ -6,5 +6,5 @@ Installation
 
 `Preferences` -> `Online Services` -> `More services` -> `Install from URL`
 ```
-https://github.com/Thor77/screencloud-lutim/releases/download/v2.0.1/current.zip
+https://github.com/Thor77/screencloud-lutim/releases/download/v2.2.1/current.zip
 ```
